@@ -410,8 +410,6 @@
     confidenceScores,
     keyPhrases,
     entities,
-    language,
-    languageCode,
     piiRedactedText
 } = data;
     stampBadge.textContent = sentiment.toUpperCase();
@@ -435,17 +433,6 @@
     }
     // Remove previous extra sections
 document.querySelectorAll(".extra-result").forEach(e => e.remove());
-
-// Language Detection
-const langDiv = document.createElement("div");
-langDiv.className = "entities-block extra-result";
-langDiv.innerHTML = `
-    <p class="sheet-label">Language Detection</p>
-    <div class="entity-list mono small">
-        <span class="entity-chip">${language} <span class="cat">${languageCode}</span></span>
-    </div>
-`;
-pageBody.appendChild(langDiv);
 
 // PII Redaction
 const piiDiv = document.createElement("div");

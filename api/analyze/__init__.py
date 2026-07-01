@@ -41,8 +41,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         keyphrase_doc = _call_language("KeyPhraseExtraction", text)["results"]["documents"][0]
         entity_doc = _call_language("EntityRecognition", text)["results"]["documents"][0]
 
-        language_doc = _call_language("LanguageDetection", text)["results"]["documents"][0]
-
         pii_doc = _call_language("PiiEntityRecognition", text)["results"]["documents"][0]
 
     except Exception:
@@ -55,9 +53,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     "sentiment": sentiment_doc["sentiment"],
     "confidenceScores": sentiment_doc["confidenceScores"],
 
-    "language": language_doc["detectedLanguage"]["name"],
-    "languageCode": language_doc["detectedLanguage"]["iso6391Name"],
-
     "keyPhrases": keyphrase_doc.get("keyPhrases", []),
 
     "entities": [
@@ -68,7 +63,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         for e in entity_doc.get("entities", [])
     ],
 
-    "piiRedactedText": pii_doc.get("redactedText", text)
+    "piiRedactedText": pii_doc.get("redactedText", text),
 }
     return _json_response(result, 200)
 
