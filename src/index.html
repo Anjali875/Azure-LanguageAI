@@ -347,6 +347,7 @@
   const stampBadge = document.getElementById('stampBadge');
   const markedText = document.getElementById('markedText');
   const entityList = document.getElementById('entityList');
+  const pageBody = document.querySelector('.page-body');
   const barPos = document.getElementById('barPos');
   const barNeu = document.getElementById('barNeu');
   const barNeg = document.getElementById('barNeg');
@@ -404,8 +405,15 @@
   }
 
   function renderResults(originalText, data) {
-    const { sentiment, confidenceScores, keyPhrases, entities } = data;
-
+    const {
+    sentiment,
+    confidenceScores,
+    keyPhrases,
+    entities,
+    language,
+    languageCode,
+    piiRedactedText
+} = data;
     stampBadge.textContent = sentiment.toUpperCase();
     stampBadge.className = 'stamp ' + sentiment.toLowerCase();
 
@@ -425,7 +433,28 @@
     } else {
       entityList.innerHTML = '<span class="entity-empty">no named entities found</span>';
     }
+    // Remove previous extra sections
+document.querySelectorAll(".extra-result").forEach(e => e.remove());
 
+// Language Detection
+const langDiv = document.createElement("div");
+langDiv.className = "entities-block extra-result";
+langDiv.innerHTML = `
+    <p class="sheet-label">Language Detection</p>
+    <div class="entity-list mono small">
+        <span class="entity-chip">${language} <span class="cat">${languageCode}</span></span>
+    </div>
+`;
+pageBody.appendChild(langDiv);
+
+// PII Redaction
+const piiDiv = document.createElement("div");
+piiDiv.className = "entities-block extra-result";
+piiDiv.innerHTML = `
+    <p class="sheet-label">PII Redaction</p>
+    <p class="marked-text">${escapeHtml(piiRedactedText)}</p>
+`;
+pageBody.appendChild(piiDiv);
     resultsSheet.hidden = false;
     resultsSheet.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
